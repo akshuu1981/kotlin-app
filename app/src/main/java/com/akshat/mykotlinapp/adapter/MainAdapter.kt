@@ -11,7 +11,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class MainAdapter:ListAdapter<Blog, MainViewHolder>(DIFF_CALLBACK) {
+class MainAdapter(private val onItemClickListener: (Blog) -> Unit)
+    :ListAdapter<Blog, MainViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -19,7 +20,7 @@ class MainAdapter:ListAdapter<Blog, MainViewHolder>(DIFF_CALLBACK) {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMainBinding.inflate(inflater, parent, false)
 
-        return MainViewHolder(binding)
+        return MainViewHolder(binding,onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
@@ -40,9 +41,12 @@ class MainAdapter:ListAdapter<Blog, MainViewHolder>(DIFF_CALLBACK) {
     }
 
 
-class MainViewHolder(private val binding: ItemMainBinding) : RecyclerView.ViewHolder(binding.root) {
+class MainViewHolder(private val binding: ItemMainBinding,
+                     private val onItemClickListener: (Blog) -> Unit)
+    : RecyclerView.ViewHolder(binding.root) {
 
     fun bindTo(blog: Blog) {
+        binding.root.setOnClickListener { onItemClickListener(blog) } // 3
         binding.textTitle.text = blog.title
         binding.textDate.text = blog.date
 

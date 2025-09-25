@@ -1,5 +1,7 @@
 package com.akshat.mykotlinapp.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -17,6 +19,16 @@ import com.google.android.material.snackbar.Snackbar
 
 class BlogDetailsActivity : AppCompatActivity() {
 
+
+    companion object {
+        private const val EXTRAS_BLOG = "EXTRAS_BLOG"
+
+        fun start(activity: Activity, blog: Blog) {
+            val intent = Intent(activity, BlogDetailsActivity::class.java)
+            intent.putExtra(EXTRAS_BLOG, blog)
+            activity.startActivity(intent)
+        }
+    }
     private lateinit var binding: ActivityBlogDetailsBinding // 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,18 +39,9 @@ class BlogDetailsActivity : AppCompatActivity() {
 
         binding.imageBack.setOnClickListener { finish() }
 
-        loadData()
-
-//        Glide.with(this)
-//            .load(IMAGE_URL)
-//            .transition(DrawableTransitionOptions.withCrossFade())
-//            .into(binding.imageMain)
-//
-//        Glide.with(this)
-//            .load(AVATAR_URL)
-//            .transform(CircleCrop())
-//            .transition(DrawableTransitionOptions.withCrossFade())
-//            .into(binding.imageAvatar)
+        intent.extras?.getParcelable<Blog>(EXTRAS_BLOG)?.let { blog ->
+            showData(blog)
+        }
     }
 
     private fun loadData() {
@@ -78,13 +81,14 @@ class BlogDetailsActivity : AppCompatActivity() {
         binding.textViews.text = String.format("(%d views)", blog.views)
         binding.textDescription.text = Html.fromHtml(blog.description)
         binding.ratingBar.rating = blog.rating
+        Log.d("BlogDetailsActivity", "showData: $blog")
 
         Glide.with(this)
-            .load(blog.image)
+            .load(blog.getImageUrl())
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.imageMain)
         Glide.with(this)
-            .load(blog.author.avatar)
+            .load(blog.author.getAvatarUrl())
             .transform(CircleCrop())
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.imageAvatar)

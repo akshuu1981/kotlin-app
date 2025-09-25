@@ -13,8 +13,10 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
-    private val adapter = MainAdapter() // 1
 
+    private val adapter = MainAdapter { blog ->
+        BlogDetailsActivity.start(this, blog)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,20 +25,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this) // 2
         binding.recyclerView.adapter = adapter // 3
-
+        binding.refresh.setOnRefreshListener { // 1
+            loadData()
+        }
         loadData()
 
     }
 
     fun loadData() {
+        binding.refresh.isRefreshing = true // 2
+
         BlogHttpClient.loadBlogArticles(
             onSuccess = { blogList: List<Blog> ->
                 runOnUiThread {
+                    binding.refresh.isRefreshing = false
                     adapter.submitList(blogList)
                 }
             },
             onError = {
                 runOnUiThread {
+                    binding.refresh.isRefreshing = false
                     showErrorSnackbar()
                 }
             }
