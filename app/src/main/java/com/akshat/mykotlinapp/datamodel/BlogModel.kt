@@ -1,9 +1,13 @@
 package com.akshat.mykotlinapp.datamodel
 
+import android.os.Parcelable
 import com.akshat.mykotlinapp.BlogHttpClient
+import kotlinx.parcelize.Parcelize
 
-data class BlogData(val data: List<Blog>)
+@Parcelize
+data class BlogData(val data: List<Blog>): Parcelable
 
+@Parcelize
 data class Blog(
     val id: String,
     var author: Author,
@@ -13,11 +17,12 @@ data class Blog(
     val description: String,
     val views: Int,
     val rating: Float
-){
+): Parcelable {
     fun getImageUrl() = BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image
 }
 
-data class Author(val name: String, val avatar: String) {
+@Parcelize
+data class Author(val name: String, val avatar: String): Parcelable{
     fun getAvatarUrl() = BlogHttpClient.BASE_URL + BlogHttpClient.PATH + avatar
 }
 
