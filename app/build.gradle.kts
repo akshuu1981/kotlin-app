@@ -53,6 +53,10 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
+    implementation(libs.github.bumptech.glide)
+    implementation(libs.com.squareup.okhttp3)
+    implementation(libs.com.google.gson)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

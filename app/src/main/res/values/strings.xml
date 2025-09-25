@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">My Kotlin App</string>
+    <string name="img_date">August 2, 2019</string>
+    <string name="g_day_from_sydney">G\'day from Sydney</string>
+    <string name="name">Grayson Wells</string>
+    <string name="rating">4.4</string>
+    <string name="views">(2687 views)</string>
+    <string name="description">Australia is one of the most popular travel destinations in the world.</string>
+    <string name="profile_pic">profile pic</string>
+    <string name="city_image">city image</string>
 </resources>
