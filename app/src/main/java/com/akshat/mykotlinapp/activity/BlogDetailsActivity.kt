@@ -5,9 +5,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.akshat.mykotlinapp.AVATAR_URL
 import com.akshat.mykotlinapp.BlogHttpClient
-import com.akshat.mykotlinapp.IMAGE_URL
 import com.akshat.mykotlinapp.R
 import com.akshat.mykotlinapp.databinding.ActivityBlogDetailsBinding
 import com.akshat.mykotlinapp.datamodel.Blog
@@ -49,7 +47,9 @@ class BlogDetailsActivity : AppCompatActivity() {
         BlogHttpClient.loadBlogArticles( // 1
             onSuccess = { list: List<Blog> ->
                 Log.i("BlogDetailsActivity", "data = $list") // 2
-                runOnUiThread { showData(list[0]) } // 3
+                runOnUiThread {
+                    showData(list[0])
+                } // 3
             },
             onError = {
                 // handle error
@@ -61,7 +61,7 @@ class BlogDetailsActivity : AppCompatActivity() {
     private fun showErrorSnackbar() {
         Snackbar.make(binding.root,
             "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE).run {
-            setActionTextColor(resources.getColor(R.color.orange500))
+            setActionTextColor(getColor(R.color.orange500))
             setAction("Retry") {
                 loadData()
                 dismiss()
