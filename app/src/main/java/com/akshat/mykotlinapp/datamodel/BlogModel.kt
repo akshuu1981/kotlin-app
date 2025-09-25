@@ -1,5 +1,7 @@
 package com.akshat.mykotlinapp.datamodel
 
+import com.akshat.mykotlinapp.BlogHttpClient
+
 data class BlogData(val data: List<Blog>)
 
 data class Blog(
@@ -11,7 +13,11 @@ data class Blog(
     val description: String,
     val views: Int,
     val rating: Float
-)
+){
+    fun getImageUrl() = BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image
+}
 
-data class Author(val name: String, val avatar: String)
+data class Author(val name: String, val avatar: String) {
+    fun getAvatarUrl() = BlogHttpClient.BASE_URL + BlogHttpClient.PATH + avatar
+}
 
