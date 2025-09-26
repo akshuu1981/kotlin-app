@@ -10,12 +10,14 @@ import com.akshat.mykotlinapp.R
 import com.akshat.mykotlinapp.adapter.MainAdapter
 import com.akshat.mykotlinapp.databinding.ActivityMainBinding
 import com.akshat.mykotlinapp.datamodel.Blog
+import com.akshat.mykotlinapp.repository.BlogRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
+    private val repository by lazy { BlogRepository(applicationContext) } // 1
 
     private val adapter = MainAdapter { blog ->
         BlogDetailsActivity.start(this, blog)
@@ -55,30 +57,37 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this) // 2
         binding.recyclerView.adapter = adapter // 3
         binding.refresh.setOnRefreshListener { // 1
-            loadData()
+            loadDataFromNetwork()
         }
-        loadData()
+        loadDataFromDatabase()
+        loadDataFromNetwork()
 
     }
 
-    fun loadData() {
-        binding.refresh.isRefreshing = true // 2
-
-        BlogHttpClient.loadBlogArticles(
-            onSuccess = { blogList: List<Blog> ->
-                runOnUiThread {
-                    binding.refresh.isRefreshing = false
-                    adapter.setData(blogList)
-                    adapter.submitList(blogList)
-                }
-            },
+    private fun loadDataFromNetwork() {
+        binding.refresh.isRefreshing = true // 1
+        repository.loadDataFromNetwork (
+                onSuccess = { blogList: List<Blog> ->
+                    runOnUiThread {
+                        binding.refresh.isRefreshing = false
+                        adapter.setData(blogList)
+                        sortData()
+                    }
+                },
             onError = {
-                runOnUiThread {
-                    binding.refresh.isRefreshing = false
-                    showErrorSnackbar()
-                }
+                binding.refresh.isRefreshing = false
+                showErrorSnackbar()
             }
         )
+    }
+
+    private fun loadDataFromDatabase() {
+        repository.loadDataFromDatabase { blogList: List<Blog> ->
+            runOnUiThread {
+                adapter.setData(blogList)
+                sortData()
+            }
+        }
     }
 
     fun showErrorSnackbar(){
@@ -86,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE).run {
             setActionTextColor(getColor(R.color.orange500))
             setAction("Retry") {
-                loadData()
+                loadDataFromNetwork()
                 dismiss()
             }
         }.show()
