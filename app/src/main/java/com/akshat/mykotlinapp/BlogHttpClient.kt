@@ -19,28 +19,19 @@ object BlogHttpClient {
     private val client = OkHttpClient()
     private val gson = Gson()
 
-    fun loadBlogArticles(onSuccess: (List<Blog>) -> Unit, onError: () -> Unit) {
-        val request = Request.Builder() // 1
+    fun loadBlogArticles(): List<Blog>? {
+        val request = Request.Builder()
             .get()
             .url(BLOG_ARTICLES_URL)
             .build()
 
-        executor.execute { // 2
-            runCatching { // 5
-                val response: Response = client.newCall(request).execute() // 3
-                response.body?.string()?.let { json -> // 4
-                    gson.fromJson(json, BlogData::class.java)?.let { blogData ->
-                        return@runCatching blogData.data
-                    }
+        return runCatching {
+            val response: Response = client.newCall(request).execute()
+            response.body?.string()?.let { json ->
+                gson.fromJson(json, BlogData::class.java)?.let { blogData ->
+                    return@runCatching blogData.data
                 }
-            }.onFailure { e: Throwable ->
-                Log.e("BlogHttpClient", "Error loading blog articles", e)
-                // error
-                onError()
-            }.onSuccess { value: List<Blog>? ->
-                // success
-                onSuccess(value ?: emptyList())
             }
-        }
+        }.getOrNull()
     }
 }

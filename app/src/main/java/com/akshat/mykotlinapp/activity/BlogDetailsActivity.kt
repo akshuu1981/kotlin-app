@@ -44,34 +44,6 @@ class BlogDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadData() {
-        binding.progressBar.visibility = View.VISIBLE
-
-        BlogHttpClient.loadBlogArticles( // 1
-            onSuccess = { list: List<Blog> ->
-                Log.i("BlogDetailsActivity", "data = $list") // 2
-                runOnUiThread {
-                    showData(list[0])
-                } // 3
-            },
-            onError = {
-                // handle error
-                runOnUiThread { showErrorSnackbar() }
-            }
-        )
-    }
-
-    private fun showErrorSnackbar() {
-        Snackbar.make(binding.root,
-            "Error during loading blog articles", Snackbar.LENGTH_INDEFINITE).run {
-            setActionTextColor(getColor(R.color.orange500))
-            setAction("Retry") {
-                loadData()
-                dismiss()
-            }
-        }.show()
-    }
-
     private fun showData(blog: Blog) {
         binding.progressBar.visibility = View.INVISIBLE
         binding.textTitle.text = blog.title

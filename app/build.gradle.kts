@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.kapt)
+
 }
 
 android {
@@ -58,6 +60,10 @@ dependencies {
     implementation(libs.com.squareup.okhttp3)
     implementation(libs.com.google.gson)
     implementation(libs.androidx.swiperefreshlayout)
+
+    implementation(libs.androidx.room)
+    annotationProcessor(libs.androidx.roomcompiler)
+    kapt(libs.androidx.roomcompiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
