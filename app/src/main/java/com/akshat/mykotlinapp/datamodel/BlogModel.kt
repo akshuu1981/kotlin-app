@@ -3,9 +3,12 @@ package com.akshat.mykotlinapp.datamodel
 import android.os.Parcelable
 import com.akshat.mykotlinapp.BlogHttpClient
 import kotlinx.parcelize.Parcelize
+import java.text.SimpleDateFormat
 
 @Parcelize
 data class BlogData(val data: List<Blog>): Parcelable
+
+private val dateFormat = SimpleDateFormat("MMMM dd, yyyy") // 1
 
 @Parcelize
 data class Blog(
@@ -19,6 +22,9 @@ data class Blog(
     val rating: Float
 ): Parcelable {
     fun getImageUrl() = BlogHttpClient.BASE_URL + BlogHttpClient.PATH + image
+
+    fun getDateMillis() = dateFormat.parse(date).time // 2
+
 }
 
 @Parcelize

@@ -13,6 +13,19 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 class MainAdapter(private val onItemClickListener: (Blog) -> Unit)
     :ListAdapter<Blog, MainViewHolder>(DIFF_CALLBACK) {
+
+    private var originalList: List<Blog> = ArrayList()
+
+    fun setData(list: List<Blog>) {
+        originalList = list
+        super.submitList(list)
+    }
+
+    fun filter(query: String) {
+        submitList(originalList
+            .filter { blog -> blog.title.contains(query, ignoreCase = true) })
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -26,6 +39,15 @@ class MainAdapter(private val onItemClickListener: (Blog) -> Unit)
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.bindTo(getItem(position))
     }
+
+    fun sortByTitle() {
+        submitList(currentList.sortedBy { blog -> blog.title })
+    }
+
+    fun sortByDate(){
+        submitList(currentList.sortedBy { blog -> blog.getDateMillis() })
+    }
+
 }
 
     private val DIFF_CALLBACK: DiffUtil.ItemCallback<Blog> = object : DiffUtil.ItemCallback<Blog>() {

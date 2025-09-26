@@ -8,4 +8,7 @@
     <string name="description">Australia is one of the most popular travel destinations in the world.</string>
     <string name="profile_pic">profile pic</string>
     <string name="city_image">city image</string>
+    <string name="sort">Sort</string>
+    <string name="sort_title">Sort order</string>
+    <string name="search">Search</string>
 </resources>
